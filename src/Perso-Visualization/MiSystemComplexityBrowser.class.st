@@ -31,16 +31,24 @@ MiSystemComplexityBrowser class >> title [
 { #category : #testing }
 MiSystemComplexityBrowser >> canReceiveEntity: anObject [
 
+
 	^ (self needUpdate: anObject) and: [ 
-		  anObject asMooseSpecializedGroup isKindOf: FamixTypeGroup ]
+		  (anObject asMooseSpecializedGroup isKindOf: FamixTypeGroup) or: [ 
+			  anObject asMooseSpecializedGroup allSatisfy: [ :entity | 
+				  (entity isKindOf: FamixStPackage) and: [ entity isStub not ] ] ] ]
 ]
 
 { #category : #actions }
 MiSystemComplexityBrowser >> followEntity: anEntity [
 
 	visualization
-		entities: anEntity asMooseSpecializedGroup;
+		entities: ((anEntity asCollection allSatisfy: [:entity | entity isKindOf: FamixStPackage])
+				 ifTrue: [ anEntity allClasses asMooseSpecializedGroup ] "FIXME: comment recuperer l'ensemble des classes des packages"
+				 ifFalse: [ anEntity asMooseSpecializedGroup ]);
 		run
+		
+	
+
 ]
 
 { #category : #initialization }

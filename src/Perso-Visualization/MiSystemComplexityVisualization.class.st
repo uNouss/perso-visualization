@@ -9,14 +9,14 @@ Class {
 }
 
 { #category : #highlighting }
-MiSystemComplexityVisualization >> boxFor: cls [
+MiSystemComplexityVisualization >> boxFor: aClass [
 
 	^ RSBox new
-		  model: cls;
+		  model: aClass;
 		  borderColor: Color black;
 		  @ RSDraggable;
 		  @ RSPopup;
-		addInteraction:
+		  addInteraction:
 			  (MiSelection on: [ :entity | self selected: entity ]);
 		  yourself
 ]
