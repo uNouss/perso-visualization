@@ -1,5 +1,5 @@
 Class {
-	#name : #MiSystemComplexityBrowserTest,
+	#name : #MiPackageBlueprintBrowserTest,
 	#superclass : #MiAbstractBrowserTest,
 	#instVars : [
 		'model',
@@ -31,28 +31,17 @@ Class {
 }
 
 { #category : #running }
-MiSystemComplexityBrowserTest >> browserClass [
+MiPackageBlueprintBrowserTest >> browserClass [
 
-	^ MiSystemComplexityBrowser
+	^ MiPackageBlueprintBrowser 
 ]
 
 { #category : #running }
-MiSystemComplexityBrowserTest >> mooseObjects [
-
-	^ { 
-		  FamixStPackage new.
-		  MooseGroup new.
-		  (MooseGroup with: FamixStPackage new).
-		  FamixStModel new.
-		  (FamixStModel with: FamixStPackage new) }
-]
-
-{ #category : #running }
-MiSystemComplexityBrowserTest >> setUp [
+MiPackageBlueprintBrowserTest >> setUp [
 
 	super setUp.
-	
-model := FamixJavaModel new.
+
+	model := FamixJavaModel new.
 	package1 := (FamixJavaPackage named: 'package1') mooseModel: model.
 	package2 := (FamixJavaPackage named: 'package2') mooseModel: model.
 	isolatedPackage := (FamixJavaPackage named: 'isolatedPackage') 
@@ -123,62 +112,4 @@ model := FamixJavaModel new.
 		        source: method1
 		        target: class2
 		        model: model
-]
-
-{ #category : #running }
-MiSystemComplexityBrowserTest >> testBuildPackageContainingEmptyClass [
-
-| pkg c1 c2 ih |
-pkg := FamixStPackage new.
-c1 := FamixStClass new.
-c2 := FamixStClass new.
-ih := FamixStInheritance new.
-ih
-superclass: c1;
-subclass: c2.
-c1 addSubInheritance: ih.
-c2 addSuperInheritance: ih.
-pkg addChildEntity: c2.
-^ pkg
-]
-
-{ #category : #running }
-MiSystemComplexityBrowserTest >> testCanOpenOnMooseEntity1 [
-
-	| newBrowser |
-	self bus globallySelect: MooseEntity new.
-	self
-		shouldnt: [ 
-			newBrowser := self browserClass openForTests.
-			newBrowser window close ]
-		raise: Error
-]
-
-{ #category : #running }
-MiSystemComplexityBrowserTest >> testDropListNotEmptyForPackageWithEmptyClass [
-
-	| newBrowser |
-self bus globallySelect: self testBuildPackageContainingEmptyClass.
-self
-shouldnt: [
-newBrowser := self browserClass openForTests.
-self assert: newBrowser colorDropList items isNotEmpty equals: true.
-self assert: newBrowser heightDropList  items isNotEmpty equals: true.
-self assert: newBrowser widthDropList  items isNotEmpty equals: true.
-newBrowser window close ]
-raise: Error
-]
-
-{ #category : #running }
-MiSystemComplexityBrowserTest >> testFollowBusTriggersSelectEntity1 [
-
-	| propagatedEntity |
-	propagatedEntity := MooseEntity new.
-
-	browser stub.
-
-	self bus globallySelect: propagatedEntity.
-
-	browser followBus: self bus.
-	browser should receive selectEntity: propagatedEntity
 ]
